@@ -1,0 +1,19 @@
+{
+  "name": "jfb",
+  "version": "1.0.0",
+  "description": "Class jf manager",
+  "main": "app.js",
+  "scripts": {
+    "test": "node run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/McLDY/jfb.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/McLDY/jfb/issues"
+  },
+  "homepage": "https://github.com/McLDY/jfb#readme"
+}
