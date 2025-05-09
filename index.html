@@ -61,67 +61,21 @@
     </div>
 
     <script>
-        // 新增密码验证相关代码
-        // 初始化密码（首次运行时设置）
-        const DEFAULT_PASSWORD = '123456'; // 初始默认密码
-        if (!localStorage.getItem('systemPassword')) {
-            localStorage.setItem('systemPassword', DEFAULT_PASSWORD);
-        }
-
-        // 显示/隐藏主界面
-        function toggleMainUI(show) {
-            document.getElementById('passwordModal').style.display = show ? 'none' : 'flex';
-            document.querySelector('.header').style.display = show ? 'block' : 'none';
-            document.querySelector('.menu').style.display = show ? 'flex' : 'none';
-            document.getElementById('students-container').style.display = show ? 'grid' : 'none';
-        }
-        function j(){
-            location.href = "./aa.html"
-        }
-       
-        function checkPassword() {
-            const input = document.getElementById('passwordInput').value;
-            const savedPassword = localStorage.getItem('systemPassword');
-            const errorMsg = document.getElementById('errorMsg');
-
-            if (input === savedPassword) {
-                //toggleMainUI(true);
-                j()
-            } else {
-                errorMsg.textContent = '密码错误，请重试！';
-                document.getElementById('passwordInput').value = '';
+        var pwd1 = document.getElementById('passwordInput').value // 获取指定 id 的内容
+        var pwd = {"pwd":pwd1}
+        var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+        httpRequest.open('POST', 'url', true); //第二步：打开连接/***发送json格式文件必须设置请求头 ；如下 - */
+        httpRequest.setRequestHeader("Content-type","application/json");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）var obj = { name: 'zhansgan', age: 18 };
+        httpRequest.send(JSON.stringify(pwd));//发送请求 将json写入send中
+        /**
+         * 获取数据后的处理程序
+         */
+        httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+                var json = httpRequest.responseText;//获取到服务端返回的数据
+                console.log(json);
             }
-        }
-
-        // 修改密码功能
-        function showChangePassword() {
-            const oldPass = prompt('请输入旧密码：');
-            if (oldPass !== localStorage.getItem('systemPassword')) {
-                alert('旧密码不正确！');
-                return;
-            }
-            
-            const newPass = prompt('请输入新密码（6-12位）：');
-            if (newPass && newPass.length >= 6 && newPass.length <= 12) {
-                localStorage.setItem('systemPassword', newPass);
-                alert('密码修改成功！');
-            } else {
-                alert('密码格式不符合要求！');
-            }
-        }
-
-        // 初始化时隐藏主界面
-        document.addEventListener('DOMContentLoaded', function() {
-            toggleMainUI(false);
-            // 保持原有初始化代码
-            loadData();
-            renderStudents();
-            
-            // 原有其他事件监听...
-        });
-
-        // 保持原有其他功能代码不变
-        // ...
+        };
     </script>
 </body>
 </html>
