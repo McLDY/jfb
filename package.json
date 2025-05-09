@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/McLDY/jfb/issues"
   },
-  "homepage": "https://github.com/McLDY/jfb#readme"
+  "homepage": "https://github.com/McLDY/jfb#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }

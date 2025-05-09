@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级积分系统</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            color: #4a6ea9;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .menu button {
+            margin: 0 10px;
+            padding: 8px 16px;
+            background-color: #4a6ea9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .menu button:hover {
+            background-color: #3a5a8f;
+        }
+        .students-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+        .student-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .student-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        .student-name:hover {
+            background-color: #f0f0f0;
+        }
+        .student-name-input {
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .student-info {
+            margin-bottom: 10px;
+        }
+        .student-actions {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .add-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .subtract-btn {
+            background-color: #f44336;
+            color: white;
+        }
+        .redeem-btn {
+            background-color: #ff9800;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 5px;
+            width: 100%;
+        }
+        .point-input {
+            width: 40px;
+            text-align: center;
+            margin: 0 5px;
+            padding: 2px;
+        }
+        .ranking-container {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .ranking-table th, .ranking-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .ranking-table th {
+            background-color: #4a6ea9;
+            color: white;
+        }
+        .ranking-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✨ 班级积分系统 ✨</h1>
+    </div>
+    
+    <div class="menu">
+        <button id="ranking-btn">积分排行榜</button>
+        <button id="add-all-btn">全班加分</button>
+        <button id="subtract-all-btn">全班减分</button>
+        <button id="reset-btn">积分清零</button>
+    </div>
+    
+    <div class="ranking-container" id="ranking-container">
+        <table class="ranking-table">
+            <thead>
+                <tr>
+                    <th>排行</th>
+                    <th>姓名</th>
+                    <th>积分</th>
+                </tr>
+            </thead>
+            <tbody id="ranking-body"></tbody>
+        </table>
+    </div>
+    
+    <div class="students-container" id="students-container"></div>
+    
+    <script>
+        // 初始学生数据 (55名学生)
+        let students = [
+            { name: "陈昱杰", points: 0, coins: 0 },
+            { name: "程东阳", points: 0, coins: 0 },
+            { name: "丑悦淇", points: 0, coins: 0 },
+            { name: "高轩昂", points: 0, coins: 0 },
+            { name: "葛鑫宝", points: 0, coins: 0 },
+            { name: "郭炅瑶", points: 0, coins: 0 },
+            { name: "郭金泽", points: 0, coins: 0 },
+            { name: "郭浚茜", points: 0, coins: 0 },
+            { name: "郭宇瑶", points: 0, coins: 0 },
+            { name: "胡凤妍", points: 0, coins: 0 },
+            { name: "胡钰彤", points: 0, coins: 0 },
+            { name: "解芸梦宸", points: 0, coins: 0 },
+            { name: "李陈明阁", points: 0, coins: 0 },
+            { name: "李昊辰", points: 0, coins: 0 },
+            { name: "李牧堃", points: 0, coins: 0 },
+            { name: "李晟睿", points: 0, coins: 0 },
+            { name: "李钰涵", points: 0, coins: 0 },
+            { name: "梁晴宣", points: 0, coins: 0 },
+            { name: "刘泽琼", points: 0, coins: 0 },
+            { name: "刘子漩", points: 0, coins: 0 },
+            { name: "韩祎轩", points: 0, coins: 0 },
+            { name: "龙振安", points: 0, coins: 0 },
+            { name: "马博宇", points: 0, coins: 0 },
+            { name: "毛玉晨", points: 0, coins: 0 },
+            { name: "牛旭泽", points: 0, coins: 0 },
+            { name: "千石子轩", points: 0, coins: 0 },
+            { name: "赵翊辰", points: 0, coins: 0 },
+            { name: "尚子翔", points: 0, coins: 0 },
+            { name: "史世博", points: 0, coins: 0 },
+            { name: "孙凯瑞", points: 0, coins: 0 },
+            { name: "仝毅轩", points: 0, coins: 0 },
+            { name: "万晨杰", points: 0, coins: 0 },
+            { name: "万瑞希", points: 0, coins: 0 },
+            { name: "王可馨", points: 0, coins: 0 },
+            { name: "王若曦", points: 0, coins: 0 },
+            { name: "王若萱", points: 0, coins: 0 },
+            { name: "王语萌心", points: 0, coins: 0 },
+            { name: "王玉玺", points: 0, coins: 0 },
+            { name: "王紫彤", points: 0, coins: 0 },
+            { name: "温若彤", points: 0, coins: 0 },
+            { name: "吴妙雨", points: 0, coins: 0 },
+            { name: "邢昭瑞", points: 0, coins: 0 },
+            { name: "徐雯洁", points: 0, coins: 0 },
+            { name: "薛文垚", points: 0, coins: 0 },
+            { name: "薛一诺", points: 0, coins: 0 },
+            { name: "闫迪伊彤", points: 0, coins: 0 },
+            { name: "叶佳琦", points: 0, coins: 0 },
+            { name: "尹晨骁", points: 0, coins: 0 },
+            { name: "袁嘉晨", points: 0, coins: 0 },
+            { name: "张允昊", points: 0, coins: 0 },
+            { name: "宁怀裕", points: 0, coins: 0 },
+            { name: "朱王美森", points: 0, coins: 0 },
+            { name: "庄子皓", points: 0, coins: 0 },
+            { name: "谢庭宇", points: 0, coins: 0 },
+            { name: "刘思童", points: 0, coins: 0 }
+        ];
+
+        // 从本地存储加载数据
+        function loadData() {
+            const savedData = localStorage.getItem('classPointsData');
+            if (savedData) {
+                students = JSON.parse(savedData);
+            }
+        }
+
+        // 保存数据到本地存储
+        function saveData() {
+            localStorage.setItem('classPointsData', JSON.stringify(students));
+        }
+
+        // 渲染学生卡片
+        function renderStudents() {
+            const container = document.getElementById('students-container');
+            container.innerHTML = '';
+            
+            students.forEach((student, index) => {
+                const card = document.createElement('div');
+                card.className = 'student-card';
+                
+                card.innerHTML = `
+                    <div class="student-name" data-index="${index}">${student.name}</div>
+                    <div class="student-info">
+                        <div>积分: <span id="points-${index}">${student.points}</span></div>
+                        <div>兑换币: <span id="coins-${index}">${student.coins}</span></div>
+                    </div>
+                    <div class="student-actions">
+                        <button class="action-btn subtract-btn" data-index="${index}">-</button>
+                        <input type="number" class="point-input" id="point-input-${index}" value="1" min="1">
+                        <button class="action-btn add-btn" data-index="${index}">+</button>
+                    </div>
+                    <button class="redeem-btn" data-index="${index}">兑换奖励 (消耗10兑换币)</button>
+                `;
+                
+                container.appendChild(card);
+            });
+            
+            // 添加事件监听器
+            document.querySelectorAll('.add-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    const input = document.getElementById(`point-input-${index}`);
+                    const pointsToAdd = parseInt(input.value) || 1;
+                    
+                    students[index].points += pointsToAdd;
+                    students[index].coins += pointsToAdd;
+                    updateStudentDisplay(index);
+                    saveData();
+                });
+            });
+            
+            document.querySelectorAll('.subtract-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    const input = document.getElementById(`point-input-${index}`);
+                    const pointsToSubtract = parseInt(input.value) || 1;
+                    
+                    students[index].points = Math.max(0, students[index].points - pointsToSubtract);
+                    students[index].coins = Math.max(0, students[index].coins - pointsToSubtract);
+                    updateStudentDisplay(index);
+                    saveData();
+                });
+            });
+            
+            document.querySelectorAll('.redeem-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    
+                    if (students[index].coins >= 10) {
+                        students[index].coins -= 10;
+                        updateStudentDisplay(index);
+                        saveData();
+                        alert(`${students[index].name} 成功兑换奖励！`);
+                    } else {
+                        alert(`${students[index].name} 的兑换币不足！`);
+                    }
+                });
+            });
+            
+            // 添加双击修改姓名功能
+            document.querySelectorAll('.student-name').forEach(nameElement => {
+                nameElement.addEventListener('dblclick', function() {
+                    const index = this.getAttribute('data-index');
+                    const currentName = students[index].name;
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'student-name-input';
+                    input.value = currentName;
+                    
+                    this.parentNode.replaceChild(input, this);
+                    input.focus();
+                    
+                    const handleNameChange = () => {
+                        const newName = input.value.trim();
+                        if (newName && newName !== currentName) {
+                            students[index].name = newName;
+                            saveData();
+                        }
+                        renderStudents();
+                    };
+                    
+                    input.addEventListener('blur', handleNameChange);
+                    input.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            handleNameChange();
+                        }
+                    });
+                });
+            });
+        }
+
+        // 更新单个学生的显示
+        function updateStudentDisplay(index) {
+            document.getElementById(`points-${index}`).textContent = students[index].points;
+            document.getElementById(`coins-${index}`).textContent = students[index].coins;
+        }
+
+        // 显示排行榜
+        function showRanking() {
+            const rankingBody = document.getElementById('ranking-body');
+            rankingBody.innerHTML = '';
+            
+            // 按积分降序排序
+            const sortedStudents = [...students].sort((a, b) => b.points - a.points);
+            
+            sortedStudents.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${student.name}</td>
+                    <td>${student.points}</td>
+                `;
+                rankingBody.appendChild(row);
+            });
+            
+            document.getElementById('ranking-container').style.display = 'block';
+        }
+
+        // 隐藏排行榜
+        function hideRanking() {
+            document.getElementById('ranking-container').style.display = 'none';
+        }
+
+        // 全班加分
+        function addPointsToAll() {
+            students.forEach(student => {
+                student.points += 1;
+                student.coins += 1;
+            });
+            renderStudents();
+            saveData();
+        }
+
+        // 全班减分
+        function subtractPointsFromAll() {
+            students.forEach(student => {
+                student.points = Math.max(0, student.points - 1);
+                student.coins = Math.max(0, student.coins - 1);
+            });
+            renderStudents();
+            saveData();
+        }
+
+        // 积分清零
+        function resetPoints() {
+            if (confirm('确定要清零所有学生的积分和兑换币吗？')) {
+                students.forEach(student => {
+                    student.points = 0;
+                    student.coins = 0;
+                });
+                renderStudents();
+                saveData();
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            renderStudents();
+            
+            // 菜单按钮事件
+            document.getElementById('ranking-btn').addEventListener('click', function() {
+                if (document.getElementById('ranking-container').style.display === 'block') {
+                    hideRanking();
+                } else {
+                    showRanking();
+                }
+            });
+            
+            document.getElementById('add-all-btn').addEventListener('click', addPointsToAll);
+            document.getElementById('subtract-all-btn').addEventListener('click', subtractPointsFromAll);
+            document.getElementById('reset-btn').addEventListener('click', resetPoints);
+        });
+    </script>
+</body>
+</html>
