@@ -1,4 +1,4 @@
-{"stus":{"name":"陈昱杰","points":0,"coins":0},
+stus = [{"name":"陈昱杰","points":0,"coins":0},
 {"name":"程东阳","points":0,"coins":0},
 {"name":"丑悦淇","points":0,"coins":0},
 {"name":"高轩昂","points":0,"coins":0},
@@ -52,4 +52,4 @@
 {"name":"朱王美森","points":0,"coins":0},
 {"name":"庄子皓","points":0,"coins":0},
 {"name":"谢庭宇","points":0,"coins":0},
-{"name":"刘思童","points":0,"coins":0}}
+{"name":"刘思童","points":0,"coins":0}]

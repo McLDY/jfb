@@ -176,84 +176,57 @@
     <div class="students-container" id="students-container"></div>
     
     <script>
-        // 初始学生数据 (55名学生)
-        let students = [
-            { name: "陈昱杰", points: 0, coins: 0 },
-            { name: "程东阳", points: 0, coins: 0 },
-            { name: "丑悦淇", points: 0, coins: 0 },
-            { name: "高轩昂", points: 0, coins: 0 },
-            { name: "葛鑫宝", points: 0, coins: 0 },
-            { name: "郭炅瑶", points: 0, coins: 0 },
-            { name: "郭金泽", points: 0, coins: 0 },
-            { name: "郭浚茜", points: 0, coins: 0 },
-            { name: "郭宇瑶", points: 0, coins: 0 },
-            { name: "胡凤妍", points: 0, coins: 0 },
-            { name: "胡钰彤", points: 0, coins: 0 },
-            { name: "解芸梦宸", points: 0, coins: 0 },
-            { name: "李陈明阁", points: 0, coins: 0 },
-            { name: "李昊辰", points: 0, coins: 0 },
-            { name: "李牧堃", points: 0, coins: 0 },
-            { name: "李晟睿", points: 0, coins: 0 },
-            { name: "李钰涵", points: 0, coins: 0 },
-            { name: "梁晴宣", points: 0, coins: 0 },
-            { name: "刘泽琼", points: 0, coins: 0 },
-            { name: "刘子漩", points: 0, coins: 0 },
-            { name: "韩祎轩", points: 0, coins: 0 },
-            { name: "龙振安", points: 0, coins: 0 },
-            { name: "马博宇", points: 0, coins: 0 },
-            { name: "毛玉晨", points: 0, coins: 0 },
-            { name: "牛旭泽", points: 0, coins: 0 },
-            { name: "千石子轩", points: 0, coins: 0 },
-            { name: "赵翊辰", points: 0, coins: 0 },
-            { name: "尚子翔", points: 0, coins: 0 },
-            { name: "史世博", points: 0, coins: 0 },
-            { name: "孙凯瑞", points: 0, coins: 0 },
-            { name: "仝毅轩", points: 0, coins: 0 },
-            { name: "万晨杰", points: 0, coins: 0 },
-            { name: "万瑞希", points: 0, coins: 0 },
-            { name: "王可馨", points: 0, coins: 0 },
-            { name: "王若曦", points: 0, coins: 0 },
-            { name: "王若萱", points: 0, coins: 0 },
-            { name: "王语萌心", points: 0, coins: 0 },
-            { name: "王玉玺", points: 0, coins: 0 },
-            { name: "王紫彤", points: 0, coins: 0 },
-            { name: "温若彤", points: 0, coins: 0 },
-            { name: "吴妙雨", points: 0, coins: 0 },
-            { name: "邢昭瑞", points: 0, coins: 0 },
-            { name: "徐雯洁", points: 0, coins: 0 },
-            { name: "薛文垚", points: 0, coins: 0 },
-            { name: "薛一诺", points: 0, coins: 0 },
-            { name: "闫迪伊彤", points: 0, coins: 0 },
-            { name: "叶佳琦", points: 0, coins: 0 },
-            { name: "尹晨骁", points: 0, coins: 0 },
-            { name: "袁嘉晨", points: 0, coins: 0 },
-            { name: "张允昊", points: 0, coins: 0 },
-            { name: "宁怀裕", points: 0, coins: 0 },
-            { name: "朱王美森", points: 0, coins: 0 },
-            { name: "庄子皓", points: 0, coins: 0 },
-            { name: "谢庭宇", points: 0, coins: 0 },
-            { name: "刘思童", points: 0, coins: 0 }
-        ];
+        const savedData = localStorage.getItem('classPointsData');
+        var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+        httpRequest.open('POST', '/jfb', true); //第二步：打开连接/***发送json格式文件必须设置请求头 ；如下 - */
+        httpRequest.setRequestHeader("Content-type", "application/json");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）var obj = { name: 'zhansgan', age: 18 };
+        httpRequest.send(JSON.stringify('{"msg":"get"}'));//发送请求 将json写入send中
+        /**
+         * 获取数据后的处理程序
+         */
+        httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+            if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+                var json = httpRequest.responseText;//获取到服务端返回的数据
+                console.log(json);
+                if (JSON.parse(json).code == "0"){
+                    const savedData = json;
+                }
+            }};
+        const students = saveData
 
         // 从本地存储加载数据
-        function loadData() {
-            const savedData = localStorage.getItem('classPointsData');
-            if (savedData) {
-                students = JSON.parse(savedData);
-            }
-        }
+        /*function loadData() {
+            var students = saveData
+            
+        }*/
+
 
         // 保存数据到本地存储
         function saveData() {
-            localStorage.setItem('classPointsData', JSON.stringify(students));
+            const savedData = localStorage.getItem('classPointsData');
+            var httpRequest = new XMLHttpRequest();//第一步：创建需要的对象
+            httpRequest.open('POST', '/jfb', true); //第二步：打开连接/***发送json格式文件必须设置请求头 ；如下 - */
+            httpRequest.setRequestHeader("Content-type", "application/json");//设置请求头 注：post方式必须设置请求头（在建立连接后设置请求头）var obj = { name: 'zhansgan', age: 18 };
+            httpRequest.send(JSON.stringify('{"msg":"save"}'));//发送请求 将json写入send中
+            /**
+             * 获取数据后的处理程序
+             */
+            httpRequest.onreadystatechange = function () {//请求后的回调接口，可将请求成功后要执行的程序写在其中
+                if (httpRequest.readyState == 4 && httpRequest.status == 200) {//验证请求是否发送成功
+                    var json = httpRequest.responseText;//获取到服务端返回的数据
+                    console.log(json);
+                    if (JSON.parse(json).code == "0"){
+                        const savedData = json;
+                    }
+                }};
         }
 
         // 渲染学生卡片
         function renderStudents() {
             const container = document.getElementById('students-container');
             container.innerHTML = '';
-            
-            students.forEach((student, index) => {
+            let student;
+            for (student in students){
                 const card = document.createElement('div');
                 card.className = 'student-card';
                 
@@ -268,11 +241,10 @@
                         <input type="number" class="point-input" id="point-input-${index}" value="1" min="1">
                         <button class="action-btn add-btn" data-index="${index}">+</button>
                     </div>
-                    <button class="redeem-btn" data-index="${index}">兑换奖励 (消耗10兑换币)</button>
                 `;
                 
                 container.appendChild(card);
-            });
+            };
             
             // 添加事件监听器
             document.querySelectorAll('.add-btn').forEach(btn => {
@@ -414,7 +386,7 @@
 
         // 初始化
         document.addEventListener('DOMContentLoaded', function() {
-            loadData();
+            
             renderStudents();
             
             // 菜单按钮事件
