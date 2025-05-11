@@ -1,0 +1,61 @@
+<html>
+<head>
+    <style>
+        /* 新增密码框样式 */
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .password-box {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .password-input {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            border: 2px solid #4a6ea9;
+            border-radius: 5px;
+        }
+        .password-btn {
+            background: #4a6ea9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .error-msg {
+            color: red;
+*            margin: 10px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 新增密码验证弹窗 -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-box">
+            <h3>🔒 请输入班级(格式：年级-班级，举例：五年级一班：5-1)</h3>
+            <input type="password" id="cls" class="password-input" placeholder="输入班级">
+            <div class="error-msg" id="errorMsg"></div>
+            <h3>🔒 请输入密码</h3>
+            <input type="password" id="passwordInput" class="password-input" placeholder="输入密码">
+            <div class="error-msg" id="errorMsg"></div>
+            <button onclick="" class="password-btn">✨注册✨</button>
+        </div>
+    </div>
+</body>
+</html>
